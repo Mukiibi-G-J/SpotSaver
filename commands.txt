@@ -1,1 +1,11 @@
 npm install react-native-maps
+
+npm i react-native-android-location-enabler
+npm i react-native-maps-directions
+yarn add @gorhom/bottom-sheet@^4
+     <!-- android:value="AIzaSyA2wE10soWmWXt-LZlPC3pU7V5bcGWOpTs"/> -->
+
+cd android
+./gradlew clean
+
+npm start -- --reset-cache

@@ -5,6 +5,8 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
+
+
 public class MainActivity extends ReactActivity {
 
   /**
@@ -15,6 +17,8 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "SpotSaver";
   }
+
+
 
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link

@@ -21,11 +21,19 @@ import {
 import {COLORS} from './src/consts';
 import BottomNavigator from './src/views/navigation/BottomNavigator';
 import AppNavContainer from './src/views/navigation';
+import {
+  DestinationContextProvider,
+  OriginContextProvider,
+} from './src/context/contexts';
 
 const Stack = createStackNavigator();
 function App() {
   return (
-    <AppNavContainer />
+    <DestinationContextProvider>
+      <OriginContextProvider>
+        <AppNavContainer />
+      </OriginContextProvider>
+    </DestinationContextProvider>
     // <NavigationContainer>
     //   <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
     //   <Stack.Navigator screenOptions={{headerShown: false}}>

@@ -4,10 +4,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  TextInput,
 } from 'react-native';
 import React, {useRef} from 'react';
-import { COLORS } from '../../consts';
+import {COLORS} from '../../consts';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import PlaceAutocomplete from '../components/PlaceAutoComplete';
 // import {Avatar, Icon, COLORS} from 'react-native-elements';
 // import { parameters } from "../Global/styles";
 // import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -25,63 +28,15 @@ export default function DestinationScreen({navigation}) {
         <View style={styles.view1}>
           <Icon
             type="material-community"
-            name="arrow-left"
+            name="chevron-left"
             color={COLORS.grey1}
             size={32}
             onPress={() => navigation.goBack()}
           />
         </View>
-        <TouchableOpacity>
-          <View style={{top: 25, alignItems: 'center'}}>
-            <View style={styles.view3}>
-              {/* <Avatar
-                rounded
-                avatarStyle={{}}
-                size={30}
-                source={require('../../assets/blankProfilePic.jpg')}
-              /> */}
-              <Text style={{marginLeft: 5}}>For Someone</Text>
-              <Icon
-                type="material-community"
-                name="chevron-down"
-                color={COLORS.grey1}
-                size={26}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
       </View>
-      {/* <GooglePlacesAutocomplete
-        nearbyPlacesAPI="GooglePlacesSearch"
-        placeholder="From..."
-        listViewDisplayed="auto"
-        debounce={400}
-        //   currentLocation={true}
-        ref={textInput1}
-        minLength={2}
-        enablePoweredByContainer={false}
-        fetchDetails={true}
-        autoFocus={true}
-        styles={autoComplete}
-        query={{
-          key: GOOGLE_MAPS_APIKEY,
-          language: 'en',
-        }}
-        onPress={(data, details = null) => {
-          console.log(details.geometry);
-          dispatchOrigin({
-            type: 'ADD_ORIGIN',
-            payload: {
-              latitude: details.geometry.location.lat,
-              longitude: details.geometry.location.lng,
-              address: details.formatted_address,
-              name: details.name,
-            },
-          });
 
-          setDestination(true);
-        }}
-      /> */}
+      <PlaceAutocomplete navigation={navigation} />
     </>
   );
 }
@@ -97,7 +52,7 @@ const styles = StyleSheet.create({
 
   view1: {
     position: 'absolute',
-    top: 25,
+    top: 2,
     left: 12,
     backgroundColor: COLORS.white,
     height: 40,
@@ -145,25 +100,3 @@ const styles = StyleSheet.create({
   },
 });
 
-const autoComplete = {
-  textInput: {
-    backgroundColor: COLORS.grey6,
-    height: 50,
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    fontSize: 15,
-    flex: 1,
-    borderWidth: 1,
-    marginHorizontal: 15,
-  },
-  container: {
-    paddingTop: 20,
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-
-  textInputContainer: {
-    flexDirection: 'row',
-  },
-};

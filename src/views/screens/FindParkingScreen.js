@@ -11,16 +11,44 @@ import React from 'react';
 import {COLORS} from '../../consts';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapComponents from '../components/MapComponents';
-const statusHeight = 40;
+import promptForEnableLocation from '../../Global/promptForEnableLoaction';
+import {parkingAround} from '../../Global/data';
+import {DestinationContext, OriginContext} from '../../context/contexts';
+// import {
+//   BottomSheetModal,
+//   BottomSheetModalProvider,
+// } from '@gorhom/bottom-sheet'
 
-export default function FindParkingScreen({navigation}) {
-  const [statusBarHeight, setStatusBarHeight] = React.useState(0);
+import {useNavigation} from '@react-navigation/native';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
+import BottomSheetMY from '../components/BottomSheet';
+
+export default function FindParkingScreen({navigation, route}) {
+  console.log(route)
+  const {origin, dispatchOrigin} = React.useContext(OriginContext);
+  const {destination, dispatchDestination} =
+    React.useContext(DestinationContext);
+  const [userOrigin, setUserOrigin] = React.useState({
+    latitude: origin.latitude,
+    longitude: origin.longitude,
+  });
+  // const navigation = useNavigation();
+  const [userDestination, setUserDestination] = React.useState({
+    latitude: destination.latitude,
+    longitude: destination.longitude,
+  });
   React.useEffect(() => {
-    // Fetch the status bar height and set it in the state
-    const height = StatusBar.currentHeight || 0;
-    setStatusBarHeight(height);
-  }, []);
+    setUserOrigin({latitude: origin.latitude, longitude: origin.longitude});
+    setUserDestination({
+      latitude: destination.latitude,
+      longitude: destination.longitude,
+      number: destination.number,
+    });
+
+    promptForEnableLocation();
+  }, [origin, destination, promptForEnableLocation()]);
+
   return (
     <View style={styles.container}>
       <View
@@ -72,8 +100,13 @@ export default function FindParkingScreen({navigation}) {
           </View>
         </View>
       </View>
-     
-      <MapComponents />
+
+      <MapComponents
+        parkingAround={parkingAround}
+        userOrigin={userOrigin}
+        userDestination={userDestination}
+      />
+      <BottomSheetMY route={route}/>
     </View>
   );
 }
