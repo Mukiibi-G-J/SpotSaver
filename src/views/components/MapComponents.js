@@ -89,7 +89,7 @@ const MapComponents = props => {
             destination={props.userDestination}
             apikey={API_KEY}
             strokeWidth={4}
-            strokeColor={COLORS.dark}
+            strokeColor={COLORS.primary}
           />
         )}
       </MapView>

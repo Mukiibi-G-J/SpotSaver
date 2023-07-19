@@ -6,6 +6,7 @@ import FindParkingScreen from '../screens/FindParkingScreen';
 import BottomNavigator from './BottomNavigator';
 import {COLORS} from '../../consts';
 import DestinationScreen from '../screens/DestinationScreen';
+import ParkingDetail from '../screens/ParkingDetail';
 
 const CustomStackNavigator = () => {
   //   const Stack = createNativeStackNavigator();
@@ -18,7 +19,8 @@ const CustomStackNavigator = () => {
         <Stack.Screen name="Home" component={BottomNavigator} />
         <Stack.Screen name="FindParkingScreen" component={FindParkingScreen} />
         <Stack.Screen name="DestinationScreen" component={DestinationScreen} />
-        {/* <Stack.Screen name="CartScreen" component={CartScreen} />  */} 
+        <Stack.Screen name="ParkingDetail" component={ParkingDetail} />
+        {/* <Stack.Screen name="CartScreen" component={CartScreen} />  */}
       </Stack.Navigator>
     </>
   );

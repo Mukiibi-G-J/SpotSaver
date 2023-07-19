@@ -14,6 +14,10 @@ import MapComponents from '../components/MapComponents';
 import promptForEnableLocation from '../../Global/promptForEnableLoaction';
 import {parkingAround} from '../../Global/data';
 import {DestinationContext, OriginContext} from '../../context/contexts';
+
+import {PermissionsAndroid, Platform} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+
 // import {
 //   BottomSheetModal,
 //   BottomSheetModalProvider,
@@ -23,9 +27,10 @@ import {useNavigation} from '@react-navigation/native';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 import BottomSheetMY from '../components/BottomSheet';
+import calculateShortestDistance from '../../Global/getShortestDistance';
 
 export default function FindParkingScreen({navigation, route}) {
-  console.log(route)
+  console.log(route);
   const {origin, dispatchOrigin} = React.useContext(OriginContext);
   const {destination, dispatchDestination} =
     React.useContext(DestinationContext);
@@ -48,6 +53,71 @@ export default function FindParkingScreen({navigation, route}) {
 
     promptForEnableLocation();
   }, [origin, destination, promptForEnableLocation()]);
+
+  const getCurrentUserCoordinates = () => {
+    // Request location permission for Android
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+        .then(granted => {
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            // If permission granted, get current location
+            Geolocation.getCurrentPosition(
+              position => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                // Do something with the latitude and longitude
+
+                console.log('origin');
+                console.log('Latitude:', latitude);
+                console.log('Longitude:', longitude);
+
+                dispatchOrigin({
+                  type: 'ADD_ORIGIN',
+                  payload: {
+                    latitude: latitude,
+                    longitude: longitude,
+                  },
+                });
+                console.log(origin);
+                calculateShortestDistance(
+                  origin,
+                  parkingAround,
+                  dispatchDestination,
+                );
+              },
+              error => {
+                // Handle error
+                console.log('Error:', error);
+              },
+              {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+            );
+          } else {
+            // Permission denied
+            console.log('Location permission denied');
+          }
+        })
+        .catch(error => {
+          // Handle error
+          console.log('Error:', error);
+        });
+    } else {
+      // For iOS, directly get current location
+      Geolocation.getCurrentPosition(
+        position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          // Do something with the latitude and longitude
+        },
+        error => {
+          // Handle error
+          console.log('Error:', error);
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -76,12 +146,29 @@ export default function FindParkingScreen({navigation, route}) {
             />
           </View>
           <View sytle={styles.view11}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('DestinationScreen')}>
-              <View style={styles.view6}>
-                <Text style={styles.text1}>From where</Text>
-              </View>
-            </TouchableOpacity>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('DestinationScreen')}>
+                <View style={styles.view6}>
+                  <Text style={styles.text1}>From where</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => getCurrentUserCoordinates()}>
+                <View>
+                  <Image
+                    style={{height: 25, width: 25}}
+                    source={require('../../assets/current_location2.png')}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
             <View style={styles.view7}>
               <TouchableOpacity>
                 <View style={styles.view5}>
@@ -101,12 +188,14 @@ export default function FindParkingScreen({navigation, route}) {
         </View>
       </View>
 
-      <MapComponents
-        parkingAround={parkingAround}
-        userOrigin={userOrigin}
-        userDestination={userDestination}
-      />
-      <BottomSheetMY route={route}/>
+  
+        <MapComponents
+          parkingAround={parkingAround}
+          userOrigin={userOrigin}
+          userDestination={userDestination}
+        />
+
+      <BottomSheetMY route={route} />
     </View>
   );
 }
